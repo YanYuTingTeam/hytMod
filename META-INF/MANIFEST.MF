@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: hytModDual
+Implementation-Version: 1.0
+FMLCorePluginContainsFMLMod: true
+Specification-Vendor: hytmc
+Specification-Title: hytModDual
+Implementation-Timestamp: 2026-11-09T17:42:11+0800
+ForceLoadAsMod: true
+Specification-Version: 1
+FMLCorePlugin: com.hytmc.mod.ess.coremod.CorePlugin
+Implementation-Vendor: hytmc
+
