@@ -21,6 +21,9 @@ public class TabNpcFix
 implements IModProxy {
     private static Object PLAYER_MODEL_FLAG;
     private static Method getDataWatcherMethod;
+    private static Method eventTypeMethod;
+    private static Field eventTypeField;
+    private static boolean eventTypeResolved;
 
     @Override
     public void onFMLPostInit(FMLPostInitializationEvent event) {
@@ -50,22 +53,38 @@ implements IModProxy {
     }
 
     private boolean isPlayerList(RenderGameOverlayEvent.Pre event) {
-        Method getType = Compat.findMethod(RenderGameOverlayEvent.Pre.class, "func_147683_M", new Class<?>[0]);
-        if (getType == null) {
-            getType = Compat.findMethod(RenderGameOverlayEvent.Pre.class, "getType", new Class<?>[0]);
-        }
-        if (getType == null) {
+        Object type = this.getEventType(event);
+        if (type == null) {
             return false;
         }
-        try {
-            Object type = getType.invoke(event);
-            if (type == null) {
-                return false;
+        return RenderGameOverlayEvent.ElementType.PLAYER_LIST.equals(type);
+    }
+
+    private Object getEventType(RenderGameOverlayEvent.Pre event) {
+        if (!eventTypeResolved) {
+            eventTypeMethod = Compat.findMethod(RenderGameOverlayEvent.Pre.class, "func_147683_M", new Class<?>[0]);
+            if (eventTypeMethod == null) {
+                eventTypeMethod = Compat.findMethod(RenderGameOverlayEvent.Pre.class, "getType", new Class<?>[0]);
             }
-            return RenderGameOverlayEvent.ElementType.PLAYER_LIST.equals(type);
-        } catch (Throwable e) {
-            return false;
+            eventTypeField = Compat.findField(RenderGameOverlayEvent.Pre.class, "type");
+            eventTypeResolved = true;
         }
+        if (eventTypeMethod != null) {
+            try {
+                Object type = eventTypeMethod.invoke(event);
+                if (type != null) {
+                    return type;
+                }
+            } catch (Throwable ignored) {
+            }
+        }
+        if (eventTypeField != null) {
+            try {
+                return eventTypeField.get(event);
+            } catch (Throwable ignored) {
+            }
+        }
+        return null;
     }
 
     private boolean isNPC(EntityPlayer entityPlayer) {

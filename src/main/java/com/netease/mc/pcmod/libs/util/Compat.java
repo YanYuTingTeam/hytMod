@@ -25,6 +25,10 @@ public class Compat {
     private static boolean drawStringFlatMiss;
     private static Method drawStringIntCache;
     private static boolean drawStringIntMiss;
+    private static Method drawStringIntShadowCache;
+    private static boolean drawStringIntShadowMiss;
+    private static Method drawStringFlatShadowCache;
+    private static boolean drawStringFlatShadowMiss;
 
     public static boolean isNewApi() {
         if (isNewApiCache != null) {
@@ -374,6 +378,104 @@ public class Compat {
             m.invoke(fontRenderer, text, x, y, color);
         } catch (Throwable ignored) {
         }
+    }
+
+    public static Method getDrawStringIntShadowMethod(Class<?> clazz) {
+        if (drawStringIntShadowCache != null) {
+            return drawStringIntShadowCache;
+        }
+        if (drawStringIntShadowMiss) {
+            return null;
+        }
+        Method m = findMethod(clazz, "func_78276_b", String.class, int.class, int.class, int.class, boolean.class);
+        if (m == null) {
+            m = findMethod(clazz, "drawStringWithShadow", String.class, int.class, int.class, int.class, boolean.class);
+        }
+        if (m == null) {
+            m = findMethod(clazz, "func_175063_a", String.class, float.class, float.class, int.class, boolean.class);
+        }
+        if (m == null) {
+            m = findMethod(clazz, "drawString", String.class, float.class, float.class, int.class, boolean.class);
+        }
+        if (m == null) {
+            drawStringIntShadowMiss = true;
+            return null;
+        }
+        m.setAccessible(true);
+        drawStringIntShadowCache = m;
+        return m;
+    }
+
+    public static Method getDrawStringFlatShadowMethod(Class<?> clazz) {
+        if (drawStringFlatShadowCache != null) {
+            return drawStringFlatShadowCache;
+        }
+        if (drawStringFlatShadowMiss) {
+            return null;
+        }
+        Method m = findMethod(clazz, "func_175063_a", String.class, float.class, float.class, int.class, boolean.class);
+        if (m == null) {
+            m = findMethod(clazz, "drawString", String.class, float.class, float.class, int.class, boolean.class);
+        }
+        if (m == null) {
+            m = findMethod(clazz, "func_78276_b", String.class, int.class, int.class, int.class, boolean.class);
+        }
+        if (m == null) {
+            m = findMethod(clazz, "drawStringWithShadow", String.class, int.class, int.class, int.class, boolean.class);
+        }
+        if (m == null) {
+            drawStringFlatShadowMiss = true;
+            return null;
+        }
+        m.setAccessible(true);
+        drawStringFlatShadowCache = m;
+        return m;
+    }
+
+    public static void drawStringIntWithShadow(Object fontRenderer, String text, int x, int y, int color, boolean shadow) {
+        if (fontRenderer == null) {
+            return;
+        }
+        Method m = getDrawStringIntShadowMethod(fontRenderer.getClass());
+        if (m == null) {
+            drawStringInt(fontRenderer, text, x, y, color);
+            return;
+        }
+        try {
+            Class<?>[] types = m.getParameterTypes();
+            if (types.length == 5 && types[1] == float.class) {
+                m.invoke(fontRenderer, text, (float)x, (float)y, color, shadow);
+            } else {
+                m.invoke(fontRenderer, text, x, y, color, shadow);
+            }
+        } catch (Throwable ignored) {
+            drawStringInt(fontRenderer, text, x, y, color);
+        }
+    }
+
+    public static void drawStringFlatWithShadow(Object fontRenderer, String text, float x, float y, int color, boolean shadow) {
+        if (fontRenderer == null) {
+            return;
+        }
+        Method m = getDrawStringFlatShadowMethod(fontRenderer.getClass());
+        if (m == null) {
+            drawStringFlat(fontRenderer, text, x, y, color);
+            return;
+        }
+        try {
+            Class<?>[] types = m.getParameterTypes();
+            if (types.length == 5 && types[1] == int.class) {
+                m.invoke(fontRenderer, text, (int)x, (int)y, color, shadow);
+            } else {
+                m.invoke(fontRenderer, text, x, y, color, shadow);
+            }
+        } catch (Throwable ignored) {
+            drawStringFlat(fontRenderer, text, x, y, color);
+        }
+    }
+
+    public static void drawStringWithShadow(Object fontRenderer, String text, int x, int y, int color, boolean shadow) {
+        drawStringIntWithShadow(fontRenderer, text, x, y, color, shadow);
     }
 
     public static Field findField(Class<?> clazz, String... names) {

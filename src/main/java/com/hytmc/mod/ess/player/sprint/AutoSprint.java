@@ -127,9 +127,9 @@ implements IModProxy {
         }
         if (this.showText) {
             if (this.enabled) {
-                Compat.drawStringInt(fontRenderer, renderText, this.posX + 5, this.posY + renderHeight / 2 - 4, this.getTextColor());
+                Compat.drawStringWithShadow(fontRenderer, renderText, this.posX + 5, this.posY + renderHeight / 2 - 4, this.getTextColor(), true);
             } else {
-                Compat.drawStringInt(fontRenderer, renderText, this.posX + 5, this.posY + renderHeight / 2 - 4, -1352046231);
+                Compat.drawStringWithShadow(fontRenderer, renderText, this.posX + 5, this.posY + renderHeight / 2 - 4, -1352046231, true);
             }
             if (this.sprintHelperRenderTime != -1L && this.sprintHelperRenderTime > TimeMaster.time()) {
                 ArrayList<String> strings = new ArrayList<String>(this.sprintHelperTips);

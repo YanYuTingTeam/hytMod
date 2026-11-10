@@ -114,11 +114,7 @@ extends Gui {
     }
 
     private void drawString(String str, int x, int y, int color) {
-        if (this.shadow) {
-            Compat.drawStringInt(this.fr, str, x, y, color);
-        } else {
-            Compat.drawStringInt(this.fr, str, x, y, color);
-        }
+        Compat.drawStringWithShadow(this.fr, str, x, y, color, this.shadow);
     }
 }
 
