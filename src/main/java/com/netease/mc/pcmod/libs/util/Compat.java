@@ -387,15 +387,18 @@ public class Compat {
         if (drawStringIntShadowMiss) {
             return null;
         }
-        Method m = findMethod(clazz, "func_78276_b", String.class, int.class, int.class, int.class, boolean.class);
+        Method m = findMethod(clazz, "func_175065_a", String.class, float.class, float.class, int.class, boolean.class);
         if (m == null) {
-            m = findMethod(clazz, "drawStringWithShadow", String.class, int.class, int.class, int.class, boolean.class);
+            m = findMethod(clazz, "func_175063_a", String.class, float.class, float.class, int.class);
         }
         if (m == null) {
-            m = findMethod(clazz, "func_175063_a", String.class, float.class, float.class, int.class, boolean.class);
+            m = findMethod(clazz, "drawStringWithShadow", String.class, int.class, int.class, int.class);
         }
         if (m == null) {
             m = findMethod(clazz, "drawString", String.class, float.class, float.class, int.class, boolean.class);
+        }
+        if (m == null) {
+            m = findMethod(clazz, "drawStringWithShadow", String.class, float.class, float.class, int.class);
         }
         if (m == null) {
             drawStringIntShadowMiss = true;
@@ -413,15 +416,15 @@ public class Compat {
         if (drawStringFlatShadowMiss) {
             return null;
         }
-        Method m = findMethod(clazz, "func_175063_a", String.class, float.class, float.class, int.class, boolean.class);
+        Method m = findMethod(clazz, "func_175065_a", String.class, float.class, float.class, int.class, boolean.class);
+        if (m == null) {
+            m = findMethod(clazz, "func_175063_a", String.class, float.class, float.class, int.class);
+        }
         if (m == null) {
             m = findMethod(clazz, "drawString", String.class, float.class, float.class, int.class, boolean.class);
         }
         if (m == null) {
-            m = findMethod(clazz, "func_78276_b", String.class, int.class, int.class, int.class, boolean.class);
-        }
-        if (m == null) {
-            m = findMethod(clazz, "drawStringWithShadow", String.class, int.class, int.class, int.class, boolean.class);
+            m = findMethod(clazz, "drawStringWithShadow", String.class, float.class, float.class, int.class);
         }
         if (m == null) {
             drawStringFlatShadowMiss = true;
@@ -443,7 +446,13 @@ public class Compat {
         }
         try {
             Class<?>[] types = m.getParameterTypes();
-            if (types.length == 5 && types[1] == float.class) {
+            if (types.length == 4) {
+                if (types[1] == float.class) {
+                    m.invoke(fontRenderer, text, (float)x, (float)y, color);
+                } else {
+                    m.invoke(fontRenderer, text, x, y, color);
+                }
+            } else if (types[1] == float.class) {
                 m.invoke(fontRenderer, text, (float)x, (float)y, color, shadow);
             } else {
                 m.invoke(fontRenderer, text, x, y, color, shadow);
@@ -464,7 +473,13 @@ public class Compat {
         }
         try {
             Class<?>[] types = m.getParameterTypes();
-            if (types.length == 5 && types[1] == int.class) {
+            if (types.length == 4) {
+                if (types[1] == int.class) {
+                    m.invoke(fontRenderer, text, (int)x, (int)y, color);
+                } else {
+                    m.invoke(fontRenderer, text, x, y, color);
+                }
+            } else if (types[1] == int.class) {
                 m.invoke(fontRenderer, text, (int)x, (int)y, color, shadow);
             } else {
                 m.invoke(fontRenderer, text, x, y, color, shadow);

@@ -102,7 +102,7 @@ implements IModProxy {
         int stringWidth = fontRenderer.getStringWidth(renderText);
         int x = Mouse.getEventX() * renderWidth / AutoSprint.mc.displayWidth;
         int y = renderHeight - Mouse.getEventY() * renderHeight / AutoSprint.mc.displayHeight - 1;
-        if (Mouse.isButtonDown((int)0)) {
+        if (Mouse.isButtonDown((int)0) && AutoSprint.mc.currentScreen instanceof GuiChat) {
             if (this.clickX == -1) {
                 if (x > this.posX + 1 && x < this.posX + stringWidth + 10 && (float)y > (float)this.posY + (float)renderHeight / 2.0f - 8.0f && (float)y < (float)this.posY + (float)renderHeight / 2.0f - 4.0f + 13.0f) {
                     if (this.lastclickX != -1 && this.lastclickY != -1) {
